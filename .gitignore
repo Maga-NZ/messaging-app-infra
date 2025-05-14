@@ -12,3 +12,4 @@ crash.log
 # IDE files
 .vscode/
 .idea/
+venv/
