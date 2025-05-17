@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Chat</title>
+</head>
+<body>
+    <h1>Simple Chat</h1>
+    <form action="" method="get" onsubmit="enterRoom(event)">
+        <input type="text" id="room-name-input" placeholder="Enter room name..." required>
+        <button type="submit">Enter Room</button>
+    </form>
+
+    <script>
+        function enterRoom(event) {
+            event.preventDefault();
+            const roomName = document.getElementById('room-name-input').value;
+            if (roomName.trim()) {
+                window.location.href = '/' + encodeURIComponent(roomName) + '/';
+            }
+        }
+    </script>
+</body>
+</html>

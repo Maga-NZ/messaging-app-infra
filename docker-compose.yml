@@ -1,0 +1,22 @@
+services:
+  redis:
+    image: redis
+    container_name: redis
+    networks:
+      - chat-network
+
+  web:
+    build: .
+    container_name: messaging-app
+    ports:
+      - "8000:8000"
+    networks:
+      - chat-network
+    environment:
+      - DJANGO_SETTINGS_MODULE=messaging_app.settings
+    depends_on:
+      - redis
+
+networks:
+  chat-network:
+    driver: bridge
