@@ -21,6 +21,7 @@ A lightweight real-time messaging app built with Django Channels, Redis, and Doc
 - Django 5.x
 - Django Channels
 - Redis
+- PostgreSQL
 - Docker / docker-compose
 - HTML + JavaScript frontend
 

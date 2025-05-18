@@ -1,20 +1,62 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Chat Room</title>
+    <title>Vault Chat Terminal</title>
+    <style>
+        body {
+            background-color: black;
+            color: #00FF00;
+            font-family: "Courier New", Courier, monospace;
+            padding: 20px;
+        }
+
+        h1, h2, label {
+            color: #00FF00;
+        }
+
+        input, button {
+            background-color: black;
+            color: #00FF00;
+            border: 1px solid #00FF00;
+            font-family: inherit;
+            padding: 5px;
+        }
+
+        #messages {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #00FF00;
+            padding: 10px;
+            margin-top: 10px;
+        }
+
+        li {
+            margin-bottom: 5px;
+        }
+
+        button:hover {
+            background-color: #003300;
+        }
+    </style>
 </head>
 <body>
-    <h1>Welcome to the chat room: {{ room_name }}</h1>
+    <h1>VAULT CHAT TERMINAL</h1>
+    <h2>Room: {{ room_name }}</h2>
 
-    <label>Your name</label>
-    <input id="username" type="text"><br><br>
+    <label>Username</label><br>
+    <input id="username" type="text" placeholder="Enter your name"><br><br>
 
-    <label>Type your message</label>
-    <input id="messageInput" type="text">
+    <label>Message</label><br>
+    <input id="messageInput" type="text" placeholder="Type your message">
     <button onclick="sendMessage()">Send</button>
 
-    <h2>Messages</h2>
-    <ul id="messages"></ul>
+    <div id="messages">
+        <ul id="messages-list">
+            {% for msg in messages %}
+                <li><strong>{{ msg.username }}</strong>: {{ msg.content }}</li>
+            {% endfor %}
+        </ul>
+    </div>
 
     <script>
         const roomName = "{{ room_name }}";
@@ -22,16 +64,26 @@
             'ws://' + window.location.host + '/ws/chat/' + roomName + '/'
         );
 
+        chatSocket.onopen = function(e) {
+            console.log("WebSocket connected.");
+            scrollToBottom();
+        };
+
         chatSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
-            const messageList = document.getElementById('messages');
+            const messageList = document.getElementById('messages-list');
             const newItem = document.createElement('li');
             newItem.textContent = `${data.username}: ${data.message}`;
             messageList.appendChild(newItem);
+            scrollToBottom();
+        };
+
+        chatSocket.onerror = function(e) {
+            console.error("WebSocket error:", e);
         };
 
         chatSocket.onclose = function(e) {
-            console.error('WebSocket closed unexpectedly');
+            console.error("WebSocket closed unexpectedly");
         };
 
         function sendMessage() {
@@ -39,12 +91,27 @@
             const messageInput = document.getElementById('messageInput');
             const message = messageInput.value;
 
-            chatSocket.send(JSON.stringify({
-                'username': username,
-                'message': message
-            }));
+            if (!username || !message) {
+                alert("Please enter both a name and a message.");
+                return;
+            }
+
+            if (chatSocket.readyState === WebSocket.OPEN) {
+                chatSocket.send(JSON.stringify({
+                    'username': username,
+                    'message': message
+                }));
+                console.log("Sent:", username + ": " + message);
+            } else {
+                console.error("WebSocket is not open.");
+            }
 
             messageInput.value = '';
+        }
+
+        function scrollToBottom() {
+            const messageBox = document.getElementById('messages');
+            messageBox.scrollTop = messageBox.scrollHeight;
         }
     </script>
 </body>
