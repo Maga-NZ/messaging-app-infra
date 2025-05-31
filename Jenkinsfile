@@ -48,10 +48,8 @@ pipeline {
     post {
         // Actions to be performed after the entire pipeline finishes
         always {
-            steps {
-                // Cleanup (optional, but recommended to save space)
-                // cleanWs()
-            }
+            // Cleanup (optional, but recommended to save space)
+            // cleanWs()
         }
     }
 }
