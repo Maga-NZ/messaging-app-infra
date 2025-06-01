@@ -4,7 +4,7 @@ pipeline {
 
     environment {
         AWS_REGION = 'us-west-2'
-        ECR_REPOSITORY_URI = 'YOUR_ECR_REPOSITORY_URI'
+        ECR_REPOSITORY_URI = '010526257977.dkr.ecr.us-west-2.amazonaws.com/messaging-app'
         DOCKER_IMAGE_NAME = "${ECR_REPOSITORY_URI}:${env.BUILD_NUMBER}"
     }
 
