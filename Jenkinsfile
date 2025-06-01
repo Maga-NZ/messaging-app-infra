@@ -32,11 +32,35 @@ pipeline {
                 }
             }
         }
+
+        stage('Deploy to EC2') {
+            steps {
+                echo "Deploying Docker image ${env.DOCKER_IMAGE_NAME} to application instance"
+                script {
+                    def targetInstance = "10.0.3.120" // Private IP of the application instance
+                    def appUser = "ec2-user" // Or your application user on the target instance
+                    def containerName = "messaging-app-container" // Replace with your desired container name
+
+                    // Stop and remove the old container if it's running
+                    // The '|| true' allows the command to succeed even if the container is not running
+                    sh "ssh ${appUser}@${targetInstance} 'docker stop ${containerName} || true && docker rm ${containerName} || true'"
+
+                    // Run the new container
+                    // IMPORTANT: You need to customize the 'docker run' command below
+                    // -p host_port:container_port : Map ports
+                    // -v host_path:container_path : Mount volumes for persistent data or configs
+                    // -e VARIABLE=value : Set environment variables (e.g., database connection, Django settings)
+                    // --network your_network_name : Specify a Docker network if needed
+                    // --restart unless-stopped : Configure restart policy
+                    sh "ssh ${appUser}@${targetInstance} 'docker run -d --name ${containerName} ${env.DOCKER_IMAGE_NAME}'" // *** Customize this line ***
+                }
+            }
+        }
     }
 
     post {
         always {
-            echo 'Pipeline finished (always).'
+            echo 'Pipeline finished (always).
         }
     }
 }
