@@ -1,5 +1,5 @@
 resource "aws_instance" "public_instance" {
-  ami             = data.aws_ami.amazon_linux.id
+  ami             = "ami-061211670aadd4f55"
   instance_type   = "t2.micro"
   subnet_id       = aws_subnet.public_subnet_1.id
   vpc_security_group_ids = [aws_security_group.public_sg.id]
@@ -10,7 +10,7 @@ resource "aws_instance" "public_instance" {
 }
 
 resource "aws_instance" "private_instance" {
-  ami             = data.aws_ami.amazon_linux.id
+  ami             = "ami-061211670aadd4f55"
   instance_type   = "t2.micro"
   subnet_id       = aws_subnet.private_subnet_1.id
   vpc_security_group_ids = [aws_security_group.public_sg.id]
@@ -21,7 +21,7 @@ resource "aws_instance" "private_instance" {
 }
 
 resource "aws_instance" "jenkins_server" {
-  ami                    = data.aws_ami.amazon_linux.id  # Use data source for AMI
+  ami             = "ami-061211670aadd4f55"
   instance_type          = "t2.micro"
   subnet_id              = aws_subnet.public_subnet_1.id # Jenkins instance is likely in the public subnet
   vpc_security_group_ids = [aws_security_group.jenkins_sg.id] # Attach to the Jenkins security group
