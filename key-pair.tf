@@ -4,7 +4,7 @@ resource "tls_private_key" "project_key" {
 }
 
 resource "aws_key_pair" "project_key_pair" {
-  key_name   = "Key-for-Project"
+  key_name   = "project-jenkins-key"
   public_key = tls_private_key.project_key.public_key_openssh
 }
 
