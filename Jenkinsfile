@@ -3,7 +3,7 @@ pipeline {
     agent any
 
     environment {
-        AWS_REGION = 'YOUR_AWS_REGION'
+        AWS_REGION = 'us-west-2'
         ECR_REPOSITORY_URI = 'YOUR_ECR_REPOSITORY_URI'
         DOCKER_IMAGE_NAME = "${ECR_REPOSITORY_URI}:${env.BUILD_NUMBER}"
     }
